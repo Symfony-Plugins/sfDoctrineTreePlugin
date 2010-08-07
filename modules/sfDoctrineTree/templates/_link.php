@@ -1,0 +1,1 @@
+<?php echo link_to($record->get($field), "$model/edit?id=$identifier"); ?>
