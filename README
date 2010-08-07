@@ -1,0 +1,166 @@
+# sfDoctrineTreePlugin - Manage doctrine's nested set with a DHTML tree #
+
+## Author ##
+Copyright (C) 2010-2010 Arnoldas Lukasevicius 
+
+Copyright (C) 2008-2010 Jacques Philip  
+
+Using a modified version of Drag and drop folder tree:  
+Copyright (C) 2006  DTHMLGoodies.com, Alf Magne Kalleland
+
+## License ##
+
+LGPL
+
+## Prerequisites ##
+
+PHP v 5.2.0+  
+**Prototype v 1.6+ is required**  
+Of course sfDoctrinePlugin
+
+## Features ##
+
+- **Display a doctrine nested set and insert, rename and delete nodes through a context menu and ajax:**  
+    
+  ![screen shot][1]  
+
+- **Move complete branches of the tree through drag-drop and save the
+    history of changes in a single ajax
+    call:**  
+    
+  ![screen shot][2]
+
+- **Customize the node links through a template to integrate the tree in multiple situations.**  
+Simple link here, but could be a remote link too:
+
+
+        <?php echo link_to($record->get($field), "$model/edit?id=$identifier"); ?>
+
+## Browser compatibility ##
+
+Tested on IE 6, 7 and 8, Firefox 2 and 3 Opera 9 on Windows.  
+Let me know if you find compatibility problems on other platforms.
+
+## Installation ##
+
+Install plugin as usual.   
+For Symfony 1.2 and 1.3, enable plugins sfDoctineTreePlugin and sfProtoculousPlugin.   
+For Symfony 1.0, update the Prototype js files to version 1.6 minimum.   
+Create a nested set model according to Doctrine documentation.  
+You must enable the module sfDoctrineTree in your application settings.yml:  
+
+    all:
+      .settings:
+         enabled_modules:        [default, sfDoctrineTree]
+
+Create a link or virtual directory called sfDoctrineTreePlugin, pointing to the web folder of the plugin.
+
+## Settings and customization ##
+
+### Callbacks ###
+
+**Since 1.1.0 version**
+
+Removed support for custom callback methods (useless):
+
+* customizeTreeSelectForDeleteQuery()
+* customizeTreeUpdateQuery()
+* customizeChildToAdd()
+     
+Everything can be overrided using standart Doctrine hooks:
+
+[http://www.doctrine-project.org/projects/orm/1.2/docs/manual/event-listeners/pl#event-listeners][3]
+
+The Best way todo is to use ORM hooks because since version 1.1.0 all database operations are made using only MODEL. 
+Before version 1.1.0 it was done by DQL or MODEL depending on operation. Now we have only one point of control: MODEL.
+Be aware about that if you implemented old style callbacks and have to migrate to standart Doctrine hooks.         
+
+**Before 1.1.0 version (deprecated)**
+
+!!! (CUSTOM CALLBACKS FEATURE WILL BE REMOVED IN VERSION 1.1.0 - DON'T IT USE ANYMORE. USE DOCTRINE EVENT LISTENERS ONLY) !!!
+
+You can override the way sfDoctrineTreePlugin renames and deletes records by including callback methods in the table class of the model.  
+These methods are: customizeTreeUpdateQuery and customizeTreeSelectForDeleteQuery, they take a query object as a parameter and return a query object, so you can either add to the query or replace it in the method.
+For example, for a model called Category, you would add the following method to add a where clause. (For security or other) This method will be called to get the update query:
+
+    public function customizeTreeUpdateQuery($q)
+    {
+      $securityField = Utils::getSecurityField();
+      return $q->addWhere('security_field = ?', $securityField);
+    }
+
+Similarly the callback method customizeChildToAdd gives you a chance to update properties of a record before it is inserted as a child:
+
+    public function customizeChildToAdd($child)
+    {
+      $child->security_field = Utils::getSecurityField();
+      return $child;
+    }
+
+###Setting in app.yml###
+
+You can change the following setting by defining them in app.yml:
+
+app_doctrine_tree_rename_url default: sfDoctrineTree/rename  
+app_doctrine_tree_delete_url default: sfDoctrineTree/delete  
+app_doctrine_tree_add_child_url default: sfDoctrineTree/add_child  
+app_doctrine_tree_save_tree_url default: sfDoctrineTree/save_tree  
+
+These setting will be applied to all trees in the application
+
+### Options in the helper function ###
+
+The helper include_doctrine_tree takes several options that modify the behavior of the tree.  
+This gives you the ability to set different options for each tree.
+
+**General settings**
+
+* link_partial: Allows you to change the default link template for the nodes. (default is: 'yourmodel/edit')
+* max_depth: Limits the depth where people can add or drop nodes
+* no_help: Hides the help link and div
+
+**Root node settings**
+
+* no_root_rename: Hides the Rename context menu for the root node
+
+since 1.1.0 version: 
+  
+* no_root_expand_collapse_all: Hides the Expand All / Collapse All context menus for root node
+
+**Non-root nodes settings**
+
+All other options will be passed as HTML attributes of the nodes. (not the root)  
+Some of them will be interpreted by the js tree object:
+
+* noAdd: Hides the Add node context menu
+* noRename: Hides the Rename context menu
+* noDelete: Hides the Delete context menu
+* noDrag: Keeps the nodes from being moved
+* noSiblings: Keeps the nodes from being dropped between 2 nodes
+
+## Limitations ##
+
+sfDoctrineTreePlugin will not work with tables having composite keys.  
+It is the responsibility of your application to create the root(s) of the tree.  
+Context menus do not work with Right Click on Opera, Ctrl + Left Click is used instead.
+
+## Usage ##
+
+    <?php
+    use_helper('DoctrineTree');
+    
+    // Category nested set with 1 root
+    // include_doctrine_tree('Category', 'name');
+    
+    // Comments nested set with multiple roots
+    // include_doctrine_tree('Comment', 'title', 1); // 3rd argument is the root id of the nested set tree
+    
+    // Comments nested set with one root, using options and custom base query
+    // include_doctrine_tree('Comment', 'title', 0, array('link_partial' => 'my_module/my_partial', 'max_depth' => 8, 'no_root_rename' => 'true', 'noRename' => 'true', 'noDelete' => 'true', 'noSiblings' => 'true'), CommentTable::getTreeBaseQuery);
+    
+    //
+
+  [1]: http://svn.symfony-project.com/plugins/sfDoctrineTreePlugin/web/images/scr1.png
+  [2]: http://svn.symfony-project.com/plugins/sfDoctrineTreePlugin/web/images/scr2.png
+  [3]: http://www.doctrine-project.org/projects/orm/1.2/docs/manual/event-listeners/pl#event-listeners "http://www.doctrine-project.org/projects/orm/1.2/docs/manual/event-listeners/pl#event-listeners"
+  
