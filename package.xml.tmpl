@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.7.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>sfDoctrineTreePlugin</name>
+ <channel>plugins.symfony-project.org</channel>
+ <summary>Doctrine nested set visual manager</summary>
+ <description>Manage doctrine's nested set with a DHTML tree. See README for complete description.</description>
+ <lead>
+  <name>Jacques Philip</name>
+  <user>jphilip</user>
+  <email>jphilip@noatak.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2010-08-06</date>
+ <version>
+  <release>1.1.0</release>
+  <api>1.1.0</api>
+ </version>
+ <stability>
+  <release>stable</release>
+  <api>stable</api>
+ </stability>
+ <license uri="http://www.php.net/license">LGPL license</license>
+ <notes>Symfony 1.3 compatibility release</notes>
+ <contents>
+    ##CONTENTS##
+  </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.0</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0a12</min>
+   </pearinstaller>
+   <package>
+    <name>symfony</name>
+    <channel>pear.symfony-project.com</channel>
+    <min>1.0.0</min>
+    <max>1.4.0</max>
+    <exclude>1.4.0</exclude>
+   </package>
+  </required>
+ </dependencies>
+ <phprelease />
+ <changelog>
+	  <release>
+		<version>
+		  <release>1.0.0</release>
+		  <api>1.0.0</api>
+		</version>
+		<stability>
+		 <release>stable</release>
+		 <api>stable</api>
+		</stability>
+		<license uri="http://www.symfony-project.org/license">LGPL license</license>
+		<date>2010-01-02</date>
+		<license>LGPL</license>
+		<notes>Symfony 1.3 compatibility release</notes>
+	  </release>
+	  <release>
+		<version>
+		  <release>1.0.1</release>
+		  <api>1.0.1</api>
+		</version>
+		<stability>
+		 <release>stable</release>
+		 <api>stable</api>
+		</stability>
+		<license uri="http://www.symfony-project.org/license">LGPL license</license>
+		<date>2010-01-02</date>
+		<license>LGPL</license>
+		<notes>Updated package file</notes>
+	  </release>
+	  <release>
+		<version>
+		  <release>1.0.2</release>
+		  <api>1.0.2</api>
+		</version>
+		<stability>
+		 <release>stable</release>
+		 <api>stable</api>
+		</stability>
+		<license uri="http://www.symfony-project.org/license">LGPL license</license>
+		<date>2010-01-02</date>
+		<license>LGPL</license>
+		<notes>More package file update</notes>
+	  </release>
+	  <release>
+		<version>
+		  <release>1.0.3</release>
+		  <api>1.0.3</api>
+		</version>
+		<stability>
+		 <release>stable</release>
+		 <api>stable</api>
+		</stability>
+		<license uri="http://www.symfony-project.org/license">LGPL license</license>
+		<date>2010-07-12</date>
+		<license>LGPL</license>
+		<notes>Method 'Doctrine_Tree_NestedSet::findRoot()' deprecated 
+		       Added Doctrine version check to work on all versions</notes>
+	  </release>
+	  <release>
+		<version>
+		  <release>1.0.4</release>
+		  <api>1.0.4</api>
+		</version>
+		<stability>
+		 <release>stable</release>
+		 <api>stable</api>
+		</stability>
+		<license uri="http://www.symfony-project.org/license">LGPL license</license>
+		<date>2010-07-26</date>
+		<license>LGPL</license>
+		<notes>Change to avoid PHP warnings in templates/_nested_set_list.php
+		Optimized redundant code in actions/actions.class.php
+		Removed useless function sfDoctrineTreeActions::getTree()
+		</notes>
+	  </release>
+	  <release>
+		<version>
+		  <release>1.0.5</release>
+		  <api>1.0.5</api>
+		</version>
+		<stability>
+		 <release>stable</release>
+		 <api>stable</api>
+		</stability>
+		<license uri="http://www.symfony-project.org/license">LGPL license</license>
+		<date>2010-07-26</date>
+		<license>LGPL</license>
+		<notes>Added support for symfony 1.4 in package.xml.tmpl</notes>
+	  </release>
+	  <release>
+		<version>
+		  <release>1.1.0</release>
+		  <api>1.1.0</api>
+		</version>
+		<stability>
+		 <release>stable</release>
+		 <api>stable</api>
+		</stability>
+		<license uri="http://www.symfony-project.org/license">LGPL license</license>
+		<date>2010-08-06</date>
+		<license>LGPL</license>		
+		<notes>
+			Breaking changes since 1.0.5 release
+			------------------------------------
+			* Removed callback calls to tree models functions:
+			    	b) customizeTreeSelectForDeleteQuery()
+					a) customizeTreeUpdateQuery()
+					c) customizeChildToAdd()
+							
+			  Custom callbacks are useless. Everything can be handled using standart Doctrine hooks:			  			
+			  http://www.doctrine-project.org/projects/orm/1.2/docs/manual/event-listeners/pl#event-listeners
+			  
+			* Since version 1.1.0 all database operations are made using only MODEL. Before version 1.1.0 it was 
+			  done by DQL or MODEL depending on operation. Now we have only one point of control: MODEL.
+			  Be aware about that if you implemented old style callbacks have to migrate to standart Doctrine hooks.
+										
+			* Merged _tree.php partial with _nested_set_list.php partial. Partial _nested_set_list.php removed since 
+			  now links to "Expand All" and "Collapse All" were moved to context menu of root node. Link "Save tree" 
+			  was also removed since now saving of tree drags will be made automaticly by AJAX. After all links ware 
+			  removed no need for any separation anymore in the layout. 
+			  
+			  If you upgraded this package from previous version you have to remove file manually:			  
+			  [YOUR_PROJECT]/plugins/sfDoctrineTree/templates/_nested_set_list.php
+			  
+			New features and enhancements in 1.1.0 version
+			---------------------------------------------			
+			* Links to "Expand All" and "Collapse All" moved to root's node context menu. Depending on status of tree 
+			  you can see both options or only one option (if tree is already fully extended or collapsed). Status of 
+			  tree are recalculated upon every change was made to him: extended/collapsed all or only some of the nodes.
+			  
+			  If you do not require to have "Expand All" and "Collapse All" functions, it can be easily disabled by 
+			  setting configuration option: 'no_root_expand_collapse_all' => 'true'
+			  
+			* Drags now will be saved to server automatically after every drag by ajax. Link to "Save Tree" was removed.						
+			
+			* Removed useless code (more simple approach to solving the problems) on user side Java Script and on server 
+			  side PHP sources. Improved PHP and JavaScript source code quality too.
+			  
+			* Dramatically improved error handling on user and server side scripts quality. On every problems user side will
+			  be notified. Added double level error protection and notifying mechanism with single entrance and single exit
+			  point for all action using pre/post actions hooks. HTTP response codes and message are first line of defense.
+			  Second line of defense is JSON only based comunication. If some error wasn't handled and we got some error
+			  message output from PHP server, JSON parser will be unable to parse response content and confirm successful 
+			  status of action. In this case changes made to the tree will be reverted back. 												  			  			   			 							
+		 </notes>
+	  </release>
+</changelog>
+</package>
