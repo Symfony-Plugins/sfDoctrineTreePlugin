@@ -61,15 +61,15 @@ class sfDoctrineTreeActions extends sfActions {
 						
 		if (! sfContext::getInstance ()->getRequest ()->isXmlHttpRequest ()) {
 			$result = false;
-			$this->_response_status__message = 'Bad request. This is not an XmlHttpRequest';
+			$this->_response_status__message = 'Bad request. This is not an XmlHttpRequest.';
 			$this->_response_status__code = self::RESPONSE_STATUS__METHOD_NOT_ALLOWED;
 		} else if (sfContext::getInstance ()->getRequest ()->getMethodName () != 'POST') {
 			$result = false;
-			$this->_response_status__message = 'Bad request. Only POST method is allowed';
+			$this->_response_status__message = 'Bad request. Only POST method is allowed.';
 			$this->_response_status__code = self::RESPONSE_STATUS__METHOD_NOT_ALLOWED;
 		} else if (sfConfig::get ( 'sf_environment' ) == 'test') {
 			$result = false;
-			$this->_response_status__message = 'Bad request. Request is not allowed in test environment';
+			$this->_response_status__message = 'Bad request. Request is not allowed in test environment.';
 			$this->_response_status__code = self::RESPONSE_STATUS__METHOD_NOT_ALLOWED;
 		}
 		else {		
@@ -77,14 +77,14 @@ class sfDoctrineTreeActions extends sfActions {
 				if ($this->hasRequestParameter ( $paramToCheck )) {
 					$value = $this->getRequestParameter ( $paramToCheck );
 					if ((strlen ( trim ( $value ) ) == 0) || (count ( $value ) == 0)) {
-						$this->_response_status__message = 'Bad request. Wrong parameter ' . $paramToCheck;
+						$this->_response_status__message = 'Bad request. Wrong parameter ' . $paramToCheck.'.';
 						$this->_response_status__code = self::RESPONSE_STATUS__BAD_REQUEST;
 						$$result = false;
 						break;
 					}
 					$this->params [$paramToCheck] = $value;
 				} else {
-					$this->_response_status__message = 'Bad request. Parameter ' . $paramToCheck . ' not found';
+					$this->_response_status__message = 'Bad request. Parameter ' . $paramToCheck . ' not found.';
 					$this->_response_status__code = self::RESPONSE_STATUS__BAD_REQUEST;
 					$result = false;
 					break;
@@ -148,7 +148,7 @@ class sfDoctrineTreeActions extends sfActions {
 								$this->_response_body = array ( self::REQUEST_PARAMETER__ID => $identifier [0], 
 																'partial' => $this->getPartial ( $partial, $options ) );
 							} else {
-								$this->_response_status__message = 'Cannot insert a node that has already has a place within the tree';
+								$this->_response_status__message = 'Cannot insert a node that has already has a place within the tree.';
 								$this->_response_status__code = self::RESPONSE_STATUS__INTERNAL_SERVER_ERROR;
 							}
 						} catch ( Exception $e ) {
@@ -156,7 +156,7 @@ class sfDoctrineTreeActions extends sfActions {
 							$this->_response_status__code = self::RESPONSE_STATUS__INTERNAL_SERVER_ERROR;
 						}
 					} else {
-						$this->_response_status__message = 'Model ' . $this->params ['model'] . ' do not actAs: NestedSet';
+						$this->_response_status__message = 'Model ' . $this->params ['model'] . ' do not actAs: NestedSet.';
 						$this->_response_status__code = self::RESPONSE_STATUS__INTERNAL_SERVER_ERROR;
 					}
 				}
@@ -215,7 +215,7 @@ class sfDoctrineTreeActions extends sfActions {
 						$this->_response_status__code = self::RESPONSE_STATUS__INTERNAL_SERVER_ERROR;
 					}
 				} else {
-					$this->_response_status__message = sprintf ( 'Model %s do not actAs: NestedSet', $this->params [self::REQUEST_PARAMETER__MODEL] );
+					$this->_response_status__message = sprintf ( 'Model %s do not actAs: NestedSet', $this->params [self::REQUEST_PARAMETER__MODEL].'.' );
 					$this->_response_status__code = self::RESPONSE_STATUS__INTERNAL_SERVER_ERROR;
 				}
 			}
@@ -244,11 +244,11 @@ class sfDoctrineTreeActions extends sfActions {
 							$this->_response_status__code = self::RESPONSE_STATUS__INTERNAL_SERVER_ERROR;
 						}
 					} else {
-						$this->_response_status__message = 'Couldn\'t find the target node';
+						$this->_response_status__message = 'Couldn\'t find the target node.';
 						$this->_response_status__code = self::RESPONSE_STATUS__NOT_FOUND;
 					}
 				} else {
-					$this->_response_status__message = 'Couldn\'t find the source node';
+					$this->_response_status__message = 'Couldn\'t find the source node.';
 					$this->_response_status__code = self::RESPONSE_STATUS__NOT_FOUND;
 				}
 			}
@@ -261,7 +261,7 @@ class sfDoctrineTreeActions extends sfActions {
 	 * @return string
 	 */
 	private function getExceptionInfo(Exception $e) {
-		return sprintf ( "Exception: %s in %s line %d", $e->getMessage (), $e->getFile (), $e->getLine () );
+		return sprintf ( "Exception: %s in %s line %d", $e->getMessage (), $e->getFile (), $e->getLine ().'.' );
 	}
 	
 	/**
@@ -274,7 +274,7 @@ class sfDoctrineTreeActions extends sfActions {
 			if (($record = $table->find ( $id )) !== false) {
 				return $record;
 			} else {
-				$this->_response_status__message = 'Couldn\'t find the record';
+				$this->_response_status__message = 'Couldn\'t find the record.';
 				$this->_response_status__code = self::RESPONSE_STATUS__NOT_FOUND;
 			}
 		}
@@ -285,15 +285,12 @@ class sfDoctrineTreeActions extends sfActions {
 	 * @param unknown_type $table_name
 	 * @return Doctrine_Table|string|string
 	 */
-	private function getTable($table_name) {
+	private function getTable($table_name) {		
 		try {
-			if (($table = Doctrine::getTable ( $table_name )) !== false) {
-				return $table;
-			}
+			return Doctrine::getTable ( $table_name );
 		} catch ( Exception $e ) {
-			$this->_response_status__message = 'Couldn\'t find the table';
-			$this->_response_status__code = self::RESPONSE_STATUS__NOT_FOUND;
-			return false;
+			$this->_response_status__message = 'Couldn\'t find the table.';
+			$this->_response_status__code = self::RESPONSE_STATUS__NOT_FOUND;			
 		}
 		return false;
 	}

@@ -987,12 +987,13 @@ JSDragDropTree.prototype = {
 		this.helpObj.style.display = 'none';
 		document.body.appendChild(this.helpObj);
 
-		this.treeItems = document.getElementById(this.idOfTree)
-				.getElementsByTagName('LI');
+		this.treeItems = document.getElementById(this.idOfTree).getElementsByTagName('LI');
+		
 		for ( var no = 0; no < this.treeItems.length; no++)
 			this.addNode(this.treeItems[no]);
 
 		initExpandedNodes = this.Get_Cookie('dhtmlgoodies_expandedNodes');
+		
 		if (initExpandedNodes) {
 			var nodes = initExpandedNodes.split(',');
 			for ( var no = 0; no < nodes.length; no++) {
@@ -1000,13 +1001,15 @@ JSDragDropTree.prototype = {
 					this.showHideNode(false, 'node' + nodes[no]);
 			}
 		}
+		
 		this.contextMenu = new DHTMLGoodies_contextMenu();
 		referenceToDHTMLSuiteContextMenu = this.contextMenu;
 		this.contextMenu.setWidth(120);
 
-		if (this.treeItems.length > 0) {
-			this.__createRootNodeContextMenu();
-			this.__createNonRootNodesContextMenu();
+				
+		if (this.treeItems.length > 0) {			
+			this.__createRootNodeContextMenu();			
+			this.__createNonRootNodesContextMenu();			
 		}
 	},
 
@@ -1048,72 +1051,55 @@ JSDragDropTree.prototype = {
 		}
 	},
 
-	__createRootNodeContextMenu : function() {
-		if (this.treeItems.length > 1) {
-			var noDelete = this.treeItems[0].getAttribute('noDelete');
-			if (!noDelete) {
-				noDelete = this.treeItems[0].noDelete;
-			}
-			var noRename = this.treeItems[0].getAttribute('noRename');
-			if (!noRename) {
-				noRename = this.treeItems[0].noRename;
-			}
-			var noAdd = this.treeItems[0].getAttribute('noAdd');
-			if (!noAdd) {
-				noAdd = this.treeItems[0].noAdd;
-			}
-			this.rootNodeContextMenuModel = new DHTMLGoodies_menuModel();
-			if (!noRename) {
-				this.rootNodeContextMenuModel.addItem(1, 'Rename',
-						JSTreeObj.imageFolder + JSTreeObj.renameIcon, '',
-						false, 'JSTreeObj.renameItem');
-			}
-			if (!noDelete) {
-				this.rootNodeContextMenuModel.addItem(2, 'Delete',
-						JSTreeObj.imageFolder + JSTreeObj.deleteIcon, '',
-						false, 'JSTreeObj.deleteItem');
-			}
-			if (!noAdd) {
-				this.rootNodeContextMenuModel.addItem(3, 'Add child',
-						JSTreeObj.imageFolder + JSTreeObj.addIcon, '', false,
-						'JSTreeObj.addItem');
-			}
-
-			this.__updateRootNodeExpandCollapseMenuItems();
-
-			if (this.rootNodeContextMenuModel.menuItems.length > 0) {
-				this.rootNodeContextMenuModel.init();
-				this.__attachContextMenuToTreeItem(true, 0);
-			}
+	__createRootNodeContextMenu : function() {		
+		var noDelete = this.treeItems[0].getAttribute('noDelete');
+		if (!noDelete) {
+			noDelete = this.treeItems[0].noDelete;
 		}
+		var noRename = this.treeItems[0].getAttribute('noRename');
+		if (!noRename) {
+			noRename = this.treeItems[0].noRename;
+		}
+		var noAdd = this.treeItems[0].getAttribute('noAdd');
+		if (!noAdd) {
+			noAdd = this.treeItems[0].noAdd;
+		}
+		this.rootNodeContextMenuModel = new DHTMLGoodies_menuModel();
+		if (!noRename) { this.rootNodeContextMenuModel.addItem(1, 'Rename', JSTreeObj.imageFolder + JSTreeObj.renameIcon, '', false, 'JSTreeObj.renameItem');
+		}
+		if (!noDelete) {
+			this.rootNodeContextMenuModel.addItem(2, 'Delete', JSTreeObj.imageFolder + JSTreeObj.deleteIcon, '', false, 'JSTreeObj.deleteItem');
+		}
+		if (!noAdd) {
+			this.rootNodeContextMenuModel.addItem(3, 'Add child', JSTreeObj.imageFolder + JSTreeObj.addIcon, '', false, 'JSTreeObj.addItem');
+		}
+
+		this.__updateRootNodeExpandCollapseMenuItems();
+
+		if (this.rootNodeContextMenuModel.menuItems.length > 0) {
+			this.rootNodeContextMenuModel.init();
+			this.__attachContextMenuToTreeItem(true, 0);
+		}		
 	},
 
-	__createNonRootNodesContextMenu : function() {
-		if (this.treeItems.length > 1) {
-			this.nonRootNodeContextMenuModel = new DHTMLGoodies_menuModel();
-			if (this.renameAllowed) {
-				this.nonRootNodeContextMenuModel.addItem(4, 'Rename',
-						JSTreeObj.imageFolder + JSTreeObj.renameIcon, '',
-						false, 'JSTreeObj.renameItem');
-			}
-			if (this.deleteAllowed) {
-				this.nonRootNodeContextMenuModel.addItem(5, 'Delete',
-						JSTreeObj.imageFolder + JSTreeObj.deleteIcon, '',
-						false, 'JSTreeObj.deleteItem');
-			}
-			if (this.addAllowed) {
-				this.nonRootNodeContextMenuModel.addItem(6, 'Add child',
-						JSTreeObj.imageFolder + JSTreeObj.addIcon, '', false,
-						'JSTreeObj.addItem');
-			}
-			if (this.nonRootNodeContextMenuModel.menuItems.length > 0) {
-				this.nonRootNodeContextMenuModel.init();
-				for ( var no = 1; no < this.treeItems.length; no++) {
-					this.__attachContextMenuToTreeItem(false, no);
-				}
-			}
+	__createNonRootNodesContextMenu : function() {		
+		this.nonRootNodeContextMenuModel = new DHTMLGoodies_menuModel();
+		if (this.renameAllowed) {
+			this.nonRootNodeContextMenuModel.addItem(4, 'Rename',
+					JSTreeObj.imageFolder + JSTreeObj.renameIcon, '', false, 'JSTreeObj.renameItem');
 		}
-
+		if (this.deleteAllowed) {
+			this.nonRootNodeContextMenuModel.addItem(5, 'Delete', JSTreeObj.imageFolder + JSTreeObj.deleteIcon, '', false, 'JSTreeObj.deleteItem');
+		}
+		if (this.addAllowed) {
+			this.nonRootNodeContextMenuModel.addItem(6, 'Add child', JSTreeObj.imageFolder + JSTreeObj.addIcon, '', false, 'JSTreeObj.addItem');
+		}
+		if (this.nonRootNodeContextMenuModel.menuItems.length > 0) {
+			this.nonRootNodeContextMenuModel.init();
+			for ( var no = 1; no < this.treeItems.length; no++) {
+				this.__attachContextMenuToTreeItem(false, no);
+			}
+		}		
 	},
 	__attachContextMenuToTreeItem : function(isRootElement, no) {
 		var aTag = this.treeItems[no].getElementsByTagName('A')[0];
